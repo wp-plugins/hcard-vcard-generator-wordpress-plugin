@@ -16,7 +16,7 @@ The plugin also beefs up the user profile section with new fields for organisati
 
 == Installation ==
 
-1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
+1. Upload the plugin to the `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Place `<?php generate_card($userID, $cardType); ?>` in your templates where $userID is the user's ID and $cardType is either "hCard" or "vCard".
 
