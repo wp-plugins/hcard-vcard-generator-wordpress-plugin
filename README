@@ -1,5 +1,6 @@
 === hCard & vCard Generator ===
 Contributors: jkohlbach
+Donate link: http://www.codemyownroad.com
 Tags: hcard, vcard, users
 Requires at least: 2.8
 Tested up to: 3.1
@@ -12,6 +13,7 @@ Given a user ID, this plugin will generate appropriate miniformat compatible hCa
 The hCard & vCard Generator plugin was created to solve one specific problem, generating mini formats compatible hCards from WordPress users and companion vCards for downloading purposes.
 
 The plugin also beefs up the user profile section with new fields for organisation, job title, phone and mobile numbers
+
 == Installation ==
 
 1. Upload `plugin-name.php` to the `/wp-content/plugins/` directory
@@ -23,6 +25,10 @@ For example to generate the hCard for admin use:
 
 To generate the vCard for admin use:
 `<?php generate_card(1, 'vCard'); ?>`
+
+== Frequently Asked Questions ==
+
+N/A
 
 == Screenshots ==
 
@@ -55,3 +61,7 @@ hCard Format:
 
 = 1.0 =
 * Initial version
+
+== Upgrade Notice ==
+
+N/A
