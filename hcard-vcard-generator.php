@@ -7,7 +7,7 @@
 *
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
-* Plugin URI: http://codemyownroad.com/hcard-vcard-generator-wordpress-plugin
+* Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
 * Version: 1.0
 */
 
