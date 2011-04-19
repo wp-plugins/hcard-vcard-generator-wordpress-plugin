@@ -8,7 +8,7 @@
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.0
+* Version: 1.1
 */
 
 /*
@@ -47,7 +47,7 @@ hCard Format:
 *******************************************************************************/
 function generate_card($user_id, $type = 'hCard') {
 	$user_info = get_userdata($user_id);
-	
+	$html = '';
 	// Time to build up the selected Card Format
 	if ($type == 'hCard'|| $type == 'vCard') {
 		
@@ -83,31 +83,35 @@ function generate_card($user_id, $type = 'hCard') {
 			// Generate the vCard and save as a file
 			$fileContents = 'BEGIN:VCARD
 VERSION:3.0
-N:' . $user_info->last_name . ';' . $user_info->first_name . '
-FN:' . $user_info->display_name . '
-ORG:' . $user_info->user_organization . '
-URL:' . $user_info->user_url . '
-TITLE:' . $user_info->user_job_title . '
-TEL;TYPE=WORK,VOICE:' . $user_info->user_phone_work . '
-TEL;TYPE=CELL,VOICE:' . $user_info->user_phone_mobile . '
-EMAIL;TYPE=PREF,INTERNET:' . $user_info->user_email . '
+N:' . (!empty($user_info->last_name) ? $user_info->last_name : '') . ';' . (!empty($user_info->first_name) ? $user_info->first_name : '') . '
+FN:' . (!empty($user_info->display_name) ? $user_info->display_name : '') . '
+ORG:' . (!empty($user_info->user_organization) ? $user_info->user_organization : '') . '
+URL:' . (!empty($user_info->user_url) ? $user_info->user_url : '') . '
+TITLE:' . (!empty($user_info->user_job_title) ? $user_info->user_job_title : '') . '
+TEL;TYPE=WORK,VOICE:' . (!empty($user_info->user_phone_work) ? $user_info->user_phone_work : '') . '
+TEL;TYPE=CELL,VOICE:' . (!empty($user_info->user_phone_mobile) ? $user_info->user_phone_mobile : '') . '
+EMAIL;TYPE=PREF,INTERNET:' . (!empty($user_info->user_email) ? $user_info->user_email : '') . '
 END:VCARD';
 			
 			$userVCF = ABSPATH . '/wp-content/plugins/hcard-vcard-generator/' . 
 				$user_info->user_login . '.vcf';
 			
 			//if (!file_exists($userVCF)) {
+			
+			if (is_writable($userVCF)) {
 				$vcfFile = fopen($userVCF, "w");
 				fwrite($vcfFile, $fileContents);
 				fclose($vcfFile);
-			//}
-		
-			$html .= '
+				$html .= '
 				<div class="vcard_button">
 					<a href="' . get_bloginfo('url') . 
 					'/wp-content/plugins/hcard-vcard-generator/' . 
 					$user_info->user_login . '.vcf">Download vCard</a>
 				</div>';
+			} else {
+				echo "ERROR: Please ensure the hCard/vCard generator plugin directory is writable";
+			}
+			
 		}
 	} else {
 		// Not a valid type, return nothing.

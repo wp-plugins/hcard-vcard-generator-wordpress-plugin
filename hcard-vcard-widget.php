@@ -27,18 +27,21 @@ class Widget_hCard_vCard extends WP_Widget {
 
 		$title = $instance['title'];
 		
-		$id = get_query_var('author'); 
+		$id = get_the_author_meta('id'); 
 		$user_info = get_userdata($id);
 		
-		echo '<li class="widget hcard-vcard-generator-widget vcard">
-		<h2>Contact <span class="fn">' . $user_info->first_name . ' ' . 
-		$user_info->last_name . '</span></h2>
-		<br />
-		<div>' .
-		genCardFormat($id, 'hCard') . 
-		genCardFormat($id, 'vCard') .
-		'</div>
-		</li>';
+		if ($user_info) {
+				
+			echo '<li class="widget hcard-vcard-generator-widget vcard">
+			<h2>Contact <span class="fn">' . $user_info->first_name . ' ' . 
+			$user_info->last_name . '</span></h2>
+			<br />
+			<div>' .
+			generate_card($id, 'hCard') . 
+			generate_card($id, 'vCard') .
+			'</div>
+			</li>';
+		}
 			
 	}
 

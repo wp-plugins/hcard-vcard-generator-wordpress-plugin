@@ -59,6 +59,9 @@ hCard Format:
 
 == Changelog ==
 
+= 1.1 =
+* Updating calls to WP 3.1 standard. Fixing bugs with the widget.
+
 = 1.0 =
 * Initial version
 
