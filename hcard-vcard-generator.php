@@ -8,7 +8,7 @@
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.1
+* Version: 1.2
 */
 
 /*
@@ -93,12 +93,12 @@ TEL;TYPE=CELL,VOICE:' . (!empty($user_info->user_phone_mobile) ? $user_info->use
 EMAIL;TYPE=PREF,INTERNET:' . (!empty($user_info->user_email) ? $user_info->user_email : '') . '
 END:VCARD';
 			
-			$userVCF = ABSPATH . '/wp-content/plugins/hcard-vcard-generator/' . 
+			$userVCF = trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin' . 
 				$user_info->user_login . '.vcf';
 			
 			//if (!file_exists($userVCF)) {
 			
-			if (is_writable($userVCF)) {
+			if (is_writable(trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin')) {
 				$vcfFile = fopen($userVCF, "w");
 				fwrite($vcfFile, $fileContents);
 				fclose($vcfFile);
@@ -230,6 +230,7 @@ function init_hcard_vcard_generator() {
 	add_action('edit_user_profile', 'add_additional_user_fields');
 	add_action('edit_user_profile_update', 'save_additional_user_fields');
 	add_action('personal_options_update', 'save_additional_user_fields');
+	require_once('hcard-vcard-shortcode.php');
 }
 
 add_action('init', 'init_hcard_vcard_generator', 1);
