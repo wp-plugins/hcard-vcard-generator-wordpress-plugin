@@ -39,7 +39,6 @@ class Widget_hCard_vCard extends WP_Widget {
 				
 			echo '<' . ($inline ? 'div id="' . $args['widget_id'] . '"' : 'li') . ' class="widget hcard-vcard-generator-widget vcard">
 			<h2>' . (!empty($title) ? $title : 'Contact <span class="fn">' . $user_info->display_name . '</span>') . '</h2>
-			<br />
 			<div>' .
 			($display_hcard ? generate_card($id, 'hCard') : '') . 
 			($display_vcard ? generate_card($id, 'vCard') : '') .

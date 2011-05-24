@@ -64,6 +64,9 @@ hCard Format:
 
 == Changelog ==
 
+= 1.3 =
+* Fixing bug with vCard generation (thanks Thomas)
+
 = 1.2 =
 * Overhauled widget
 * Added shortcode display

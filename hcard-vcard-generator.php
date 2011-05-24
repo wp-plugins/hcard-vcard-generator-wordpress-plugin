@@ -93,7 +93,7 @@ TEL;TYPE=CELL,VOICE:' . (!empty($user_info->user_phone_mobile) ? $user_info->use
 EMAIL;TYPE=PREF,INTERNET:' . (!empty($user_info->user_email) ? $user_info->user_email : '') . '
 END:VCARD';
 			
-			$userVCF = trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin' . 
+			$userVCF = trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
 				$user_info->user_login . '.vcf';
 			
 			//if (!file_exists($userVCF)) {
@@ -105,7 +105,7 @@ END:VCARD';
 				$html .= '
 				<div class="vcard_button">
 					<a href="' . get_bloginfo('url') . 
-					'/wp-content/plugins/hcard-vcard-generator/' . 
+					'/wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
 					$user_info->user_login . '.vcf">Download vCard</a>
 				</div>';
 			} else {
