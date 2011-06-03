@@ -64,6 +64,9 @@ hCard Format:
 
 == Changelog ==
 
+= 1.4 =
+* Improve title generation to allow non-auto generated or blank headings (thanks Kevin)
+
 = 1.3 =
 * Fixing bug with vCard generation (thanks Thomas)
 

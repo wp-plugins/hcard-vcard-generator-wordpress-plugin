@@ -27,6 +27,7 @@ class Widget_hCard_vCard extends WP_Widget {
 		$user = $instance['user'];
 		$display_hcard = $instance['display_hcard'] == 'checked';
 		$display_vcard = $instance['display_vcard'] == 'checked';
+		$autogen_title = $instance['autogen_title'] == 'checked';
 		
 		$id = (!empty($user) ? $user : get_the_author_meta('id')); 
 		$user_info = get_userdata($id);
@@ -37,9 +38,15 @@ class Widget_hCard_vCard extends WP_Widget {
 		
 		if ($user_info) {
 				
-			echo '<' . ($inline ? 'div id="' . $args['widget_id'] . '"' : 'li') . ' class="widget hcard-vcard-generator-widget vcard">
-			<h2>' . (!empty($title) ? $title : 'Contact <span class="fn">' . $user_info->display_name . '</span>') . '</h2>
-			<div>' .
+			echo '<' . ($inline ? 'div id="' . $args['widget_id'] . '"' : 'li') . ' class="widget hcard-vcard-generator-widget vcard">';
+			
+			if (!$autogen_title) {
+				echo (!empty($title) ? '<h2 class="hcard-vcard-title">' . $title . '</h2>' : '');
+			} else {
+				echo '<h2 class="hcard-vcard-title">Contact <span class="fn">' . $user_info->display_name . '</span></h2>';
+			}
+			
+			echo '<div>' .
 			($display_hcard ? generate_card($id, 'hCard') : '') . 
 			($display_vcard ? generate_card($id, 'vCard') : '') .
 			'</div>
@@ -55,6 +62,7 @@ class Widget_hCard_vCard extends WP_Widget {
 		$new_instance = (array)$new_instance;
 
 		$instance['title'] = (!empty($new_instance['title']) ? strip_tags($new_instance['title']) : '');
+		$instance['autogen_title'] = ($new_instance['autogen_title'] == 'on' ? 'checked' : '');
 		$instance['user'] = (is_numeric(strip_tags($new_instance['user'])) ? strip_tags($new_instance['user']) : '');
 		$instance['display_hcard'] = ($new_instance['display_hcard'] == 'on' ? 'checked' : '');
 		$instance['display_vcard'] = ($new_instance['display_vcard'] == 'on' ? 'checked' : '');
@@ -70,6 +78,7 @@ class Widget_hCard_vCard extends WP_Widget {
 		//Defaults
 		$defaults = array(
 			'title' => '',
+			'autogen_title' => 'checked',
 			'user' => '',
 			'display_hcard' => 'checked',
 			'display_vcard' => 'checked'
@@ -87,7 +96,18 @@ class Widget_hCard_vCard extends WP_Widget {
 			$this->get_field_name('title') . 
 			'" value="' . 
 			$instance['title'] . '" />
-			<br /><span style="color:#808080;font-size:8pt;">Leave blank for auto title generation</span>
+			</p>
+			
+			<p>
+			<label for="' . 
+			$this->get_field_id('autogen_title') . 
+			'">Auto Generate Title?:</label>
+			<input type="checkbox" id="' . 
+			$this->get_field_id('autogen_title') . 
+			'" name="' . 
+			$this->get_field_name('autogen_title') . '"' . 
+			(!empty($instance['autogen_title']) ? ' checked="' . $instance['autogen_title'] . '"' : '') . ' />
+			<br /><span style="font-size: 8px; color: #808080; font-style: italic;">Overrides any title that you\'ve set</span>
 			</p>
 			
 			<p>

@@ -8,7 +8,7 @@
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.2
+* Version: 1.4
 */
 
 /*
@@ -95,9 +95,7 @@ END:VCARD';
 			
 			$userVCF = trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
 				$user_info->user_login . '.vcf';
-			
-			//if (!file_exists($userVCF)) {
-			
+						
 			if (is_writable(trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin')) {
 				$vcfFile = fopen($userVCF, "w");
 				fwrite($vcfFile, $fileContents);
