@@ -6,11 +6,11 @@ Requires at least: 3.0
 Tested up to: 3.1
 Stable tag: trunk
 
-Given a user ID, this plugin will generate appropriate miniformat compatible hCard and downloadable vCard formats for users.
+Given a user ID, this plugin will generate appropriate microformat compatible hCard and downloadable vCard formats for users.
 
 == Description ==
 
-The hCard & vCard Generator plugin was created to solve one specific problem, generating mini formats compatible hCards from WordPress users and companion vCards for downloading purposes.
+The hCard & vCard Generator plugin was created to solve one specific problem, generating microformats compatible hCards from WordPress users and companion vCards for downloading purposes.
 
 The plugin also beefs up the user profile section with new fields for organisation, job title, phone and mobile numbers
 
@@ -36,7 +36,6 @@ All attributes for the shortcode are optional, the current author gets used if n
 N/A
 
 == Screenshots ==
-
 Examples of format outputs:
 ---------------------------
 
@@ -50,19 +49,34 @@ ORG:Bubba Gump Shrimp Co.
 TITLE:Shrimp Man
 TEL;TYPE=WORK,VOICE:(111) 555-1212
 EMAIL;TYPE=PREF,INTERNET:forrestgump@example.com
+ADR
 END:VCARD
 
 hCard Format:
 `<div class="vcard">
 	<span class="fn">Forrest Gump</span>
 	<a class="url" href="http://example.com">http://example.com</a>
-	<span class="tel">
+	<div class="tel">
 		<span class="type">Work</span>:
 		<span class="value">+1.415.555.1212</span>
-	</span>
+	</div>
+	<div class="adr">
+		<div class="street-address">665 3rd St.</div>
+		<div class="extended-address">Suite 207</div>
+		<span class="locality">San Francisco</span>,
+		<span class="region">CA</span>
+		<span class="postal-code">94107</span>
+		<div class="country-name">U.S.A.</div>
+	</div>
 </div>`
 
 == Changelog ==
+
+= 1.6 =
+* Implement addresses
+
+= 1.5 =
+* Bug fixes
 
 = 1.4 =
 * Improve title generation to allow non-auto generated or blank headings (thanks Kevin)

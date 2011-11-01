@@ -3,12 +3,12 @@
 * Plugin Name: hCard & vCard Generator
 *
 * Description: Given a user ID, this plugin will generate appropriate hCard and 
-* vCard formats for inserting into pages wherever you like.
+* vCard microformats for inserting into pages wherever you like.
 *
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.4
+* Version: 1.6
 */
 
 /*
@@ -25,16 +25,25 @@ ORG:Bubba Gump Shrimp Co.
 TITLE:Shrimp Man
 TEL;TYPE=WORK,VOICE:(111) 555-1212
 EMAIL;TYPE=PREF,INTERNET:forrestgump@example.com
+ADR
 END:VCARD
 
 hCard Format:
 <div class="vcard">
 	<span class="fn">Forrest Gump</span>
 	<a class="url" href="http://example.com">http://example.com</a>
-	<span class="tel">
+	<div class="tel">
 		<span class="type">Work</span>:
 		<span class="value">+1.415.555.1212</span>
-	</span>
+	</div>
+	<div class="adr">
+		<div class="street-address">665 3rd St.</div>
+		<div class="extended-address">Suite 207</div>
+		<span class="locality">San Francisco</span>,
+		<span class="region">CA</span>
+		<span class="postal-code">94107</span>
+		<div class="country-name">U.S.A.</div>
+	</div>
 </div>
 */
 
@@ -78,6 +87,16 @@ function generate_card($user_id, $type = 'hCard') {
 				'<a href="' . $user_info->user_email . '">' . 
 				$user_info->user_email . '</a></div>';
 				
+			if (!empty($user_info->user_street_address_line_1))
+				$html .= '<div class="adr">
+					<div class="street-address">' . $user_info->user_street_address_line_1 . '</div>
+					<div class="extended-address">' . $user_info->user_street_address_line_2 . '</div>
+					<span class="locality">' . $user_info->user_locality . '</span>,
+					<span class="region">' . $user_info->user_region . '</span>
+					<span class="postal-code">' . $user_info->user_postcode . '</span>
+					<div class="country-name">' . $user_info->user_country . '</div>
+				</div>';
+			
 		} else {
 			
 			// Generate the vCard and save as a file
@@ -91,6 +110,12 @@ TITLE:' . (!empty($user_info->user_job_title) ? $user_info->user_job_title : '')
 TEL;TYPE=WORK,VOICE:' . (!empty($user_info->user_phone_work) ? $user_info->user_phone_work : '') . '
 TEL;TYPE=CELL,VOICE:' . (!empty($user_info->user_phone_mobile) ? $user_info->user_phone_mobile : '') . '
 EMAIL;TYPE=PREF,INTERNET:' . (!empty($user_info->user_email) ? $user_info->user_email : '') . '
+ADR:' . (!empty($user_info->user_street_address_line_1) ? $user_info->user_street_address_line_1 : '') . ';' . 
+(!empty($user_info->user_street_address_line_2) ? $user_info->user_street_address_line_2 : '') . ';' .
+(!empty($user_info->user_locality) ? $user_info->user_locality : '') . ';' .
+(!empty($user_info->user_region) ? $user_info->user_region : '') . ';' .
+(!empty($user_info->user_postcode) ? $user_info->user_postcode : '') . ';' .
+(!empty($user_info->user_country) ? $user_info->user_country : '') . '' . '
 END:VCARD';
 			
 			$userVCF = trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
@@ -133,6 +158,12 @@ function add_additional_user_fields() {
 	$user_job_title = get_user_meta($user_id, 'user_job_title', true);
 	$user_phone_work = get_user_meta($user_id, 'user_phone_work', true);	
 	$user_phone_mobile = get_user_meta($user_id, 'user_phone_mobile', true);
+	$user_street_address_line_1 = get_user_meta($user_id, 'user_street_address_line_1', true);
+	$user_street_address_line_2 = get_user_meta($user_id, 'user_street_address_line_2', true);
+	$user_locality = get_user_meta($user_id, 'user_locality', true);
+	$user_region = get_user_meta($user_id, 'user_region', true);
+	$user_postcode = get_user_meta($user_id, 'user_postcode', true);
+	$user_country = get_user_meta($user_id, 'user_country', true);
 	
 	echo '<h3>Additional Information (vCard & hCard)</h3>
 	<table class="form-table">
@@ -176,6 +207,66 @@ function add_additional_user_fields() {
 		</td>
 	</tr>	
 	
+	<tr>
+		<th>
+			<label for="user_street_address_line_1">Street Address (Line 1): </label>
+		</th>
+		<td>
+			<input name="user_street_address_line_1" id="user_street_address_line_1" value="' . 
+			$user_street_address_line_1 . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
+	<tr>
+		<th>
+			<label for="user_street_address_line_2">Street Address (Line 2): </label>
+		</th>
+		<td>
+			<input name="user_street_address_line_2" id="user_street_address_line_2" value="' . 
+			$user_street_address_line_2 . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
+	<tr>
+		<th>
+			<label for="user_locality">City: </label>
+		</th>
+		<td>
+			<input name="user_locality" id="user_locality" value="' . 
+			$user_locality . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
+	<tr>
+		<th>
+			<label for="user_region">State/Region: </label>
+		</th>
+		<td>
+			<input name="user_region" id="user_region" value="' . 
+			$user_region . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
+	<tr>
+		<th>
+			<label for="user_postcode">Postcode: </label>
+		</th>
+		<td>
+			<input name="user_postcode" id="user_postcode" value="' . 
+			$user_postcode . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
+	<tr>
+		<th>
+			<label for="user_country">Country: </label>
+		</th>
+		<td>
+			<input name="user_country" id="user_country" value="' . 
+			$user_country . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
 	</table>';
 }
 
@@ -194,23 +285,53 @@ function save_additional_user_fields() {
 
 	/* Save Organization */
 	$user_organization = $_POST['user_organization'];
-	if (!empty($user_organization)) update_usermeta($user_id, 'user_organization', $user_organization);
+	if (!empty($user_organization)) update_user_meta($user_id, 'user_organization', $user_organization);
 	else delete_user_meta($user_id, 'user_organization');
 	
 	/* Save Job Title */
 	$user_job_title = $_POST['user_job_title'];
-	if (!empty($user_job_title)) update_usermeta($user_id, 'user_job_title', $user_job_title);
+	if (!empty($user_job_title)) update_user_meta($user_id, 'user_job_title', $user_job_title);
 	else delete_user_meta($user_id, 'user_job_title');
 	
 	/* Save Phone (Work) */
 	$user_phone_work = $_POST['user_phone_work'];
-	if (!empty($user_phone_work)) update_usermeta($user_id, 'user_phone_work', $user_phone_work);
+	if (!empty($user_phone_work)) update_user_meta($user_id, 'user_phone_work', $user_phone_work);
 	else delete_user_meta($user_id, 'user_phone_work');
 	
 	/* Save Phone (Mobile) */
 	$user_phone_mobile = $_POST['user_phone_mobile'];
-	if (!empty($user_phone_mobile)) update_usermeta($user_id, 'user_phone_mobile', $user_phone_mobile);
+	if (!empty($user_phone_mobile)) update_user_meta($user_id, 'user_phone_mobile', $user_phone_mobile);
 	else delete_user_meta($user_id, 'user_phone_mobile');
+	
+	/* Street Address Line 1 */
+	$user_street_address_line_1 = $_POST['user_street_address_line_1'];
+	if (!empty($user_street_address_line_1)) update_user_meta($user_id, 'user_street_address_line_1', $user_street_address_line_1);
+	else delete_user_meta($user_id, 'user_street_address_line_1');
+	
+	/* Street Address Line 2 */
+	$user_street_address_line_2 = $_POST['user_street_address_line_2'];
+	if (!empty($user_street_address_line_2)) update_user_meta($user_id, 'user_street_address_line_2', $user_street_address_line_2);
+	else delete_user_meta($user_id, 'user_street_address_line_2');
+	
+	/* City */
+	$user_locality = $_POST['user_locality'];
+	if (!empty($user_locality)) update_user_meta($user_id, 'user_locality', $user_locality);
+	else delete_user_meta($user_id, 'user_locality');
+	
+	/* State/Region */
+	$user_region = $_POST['user_region'];
+	if (!empty($user_region)) update_user_meta($user_id, 'user_region', $user_region);
+	else delete_user_meta($user_id, 'user_region');
+	
+	/* Postcode */
+	$user_postcode = $_POST['user_postcode'];
+	if (!empty($user_postcode)) update_user_meta($user_id, 'user_postcode', $user_postcode);
+	else delete_user_meta($user_id, 'user_postcode');
+
+	/* Country */
+	$user_country = $_POST['user_country'];
+	if (!empty($user_country)) update_user_meta($user_id, 'user_country', $user_country);
+	else delete_user_meta($user_id, 'user_country');
 	
 }
 

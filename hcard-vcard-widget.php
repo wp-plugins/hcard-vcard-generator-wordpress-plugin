@@ -29,8 +29,14 @@ class Widget_hCard_vCard extends WP_Widget {
 		$display_vcard = $instance['display_vcard'] == 'checked';
 		$autogen_title = $instance['autogen_title'] == 'checked';
 		
-		$id = (!empty($user) ? $user : get_the_author_meta('id')); 
-		$user_info = get_userdata($id);
+		$id = (!empty($user) ? $user : get_the_author_meta('id'));
+		
+		if (is_numeric($id)) {
+			$user_info = get_userdata($id);
+		} else {
+			$user_info = get_userdatabylogin($user);
+			$id = $user_info->ID;
+		}
 		
 		$inline = false;
 		if ($args['inline'] == true)
@@ -56,20 +62,15 @@ class Widget_hCard_vCard extends WP_Widget {
 	}
 
 	function update($new_instance, $old_instance) {
-		//print_r($_POST);
-		
 		$instance = $old_instance;
 		$new_instance = (array)$new_instance;
 
 		$instance['title'] = (!empty($new_instance['title']) ? strip_tags($new_instance['title']) : '');
 		$instance['autogen_title'] = ($new_instance['autogen_title'] == 'on' ? 'checked' : '');
-		$instance['user'] = (is_numeric(strip_tags($new_instance['user'])) ? strip_tags($new_instance['user']) : '');
+		$instance['user'] = !empty($new_instance['user']) ? $new_instance['user'] : '';
 		$instance['display_hcard'] = ($new_instance['display_hcard'] == 'on' ? 'checked' : '');
 		$instance['display_vcard'] = ($new_instance['display_vcard'] == 'on' ? 'checked' : '');
 		
-		/* echo "NEW INFO: \n\n";
-		print_r($instance);
-		exit(); */ 
 		return $instance;
 	}
 
@@ -84,7 +85,11 @@ class Widget_hCard_vCard extends WP_Widget {
 			'display_vcard' => 'checked'
 		);
 		
+		//echo '<pre>' . print_r($instance, true) . '</pre>';
+		
 		$instance = wp_parse_args( (array)$instance, $defaults );
+		
+		
 		
 		echo '<p>
 			<label for="' . 
@@ -113,13 +118,13 @@ class Widget_hCard_vCard extends WP_Widget {
 			<p>
 			<label for="' . 
 			$this->get_field_id('user') . 
-			'">User ID:</label>
+			'">User:</label>
 			<input type="text" id="' . 
 			$this->get_field_id('user') . 
 			'" name="' . 
 			$this->get_field_name('user') . 
 			'" value="' . 
-			$instance['user'] . '" />
+			$instance['user'] . '" /><br /><span style="font-size: 8px; color: #808080; font-style: italic;">User\'s ID or login</span>
 			</p>
 			
 			<p>
