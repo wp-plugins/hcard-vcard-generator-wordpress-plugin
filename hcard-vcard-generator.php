@@ -2,8 +2,7 @@
 /*
 * Plugin Name: hCard & vCard Generator
 *
-* Description: Given a user ID, this plugin will generate appropriate hCard and 
-* vCard microformats for inserting into pages wherever you like.
+* Description: Given a user ID, this plugin will generate appropriate hCard and vCard microformats for inserting into pages wherever you like.
 *
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
