@@ -72,6 +72,9 @@ hCard Format:
 
 == Changelog ==
 
+= 1.7 =
+* Adding .htaccess to force mime type of .vcf
+
 = 1.6 =
 * Implement addresses
 
