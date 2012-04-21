@@ -2,12 +2,12 @@
 /*
 * Plugin Name: hCard & vCard Generator
 *
-* Description: Given a user ID, this plugin will generate appropriate hCard and vCard microformats for inserting into pages wherever you like.
+* Description: Generates hCard and vCard microformats for inserting into pages wherever you like.
 *
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.7
+* Version: 1.8
 */
 
 /*
@@ -62,6 +62,11 @@ function generate_card($user_id, $type = 'hCard') {
 		if ($type == 'hCard') {
 			
 			// Generate the hCard
+			if (!empty($user_info->user_photourl))
+				$html .= '<img src="' . $user_info->user_photourl . 
+				'" class="photo" alt="' . 
+				$user_info->first_name . ' ' . $user_info->last_name . '" />';
+			
 			if (!empty($user_info->user_phone_work))
 				$html .= '<div class="tel">
 			<span class="type work">Tel: </span> ' . 
@@ -80,6 +85,10 @@ function generate_card($user_id, $type = 'hCard') {
 			if (!empty($user_info->user_job_title))
 				$html .= '<div class="title" style="display:none;">' . 
 				$user_info->user_job_title . '</div>';
+				
+			if (!empty($user_info->user_note))
+				$html .= '<div class="note" style="display:none;">' . 
+				$user_info->user_note . '</div>';
 			
 			if (!empty($user_info->user_email))
 				$html .= '<div class="email" style="display:none;">' . 
@@ -103,8 +112,10 @@ function generate_card($user_id, $type = 'hCard') {
 VERSION:3.0
 N:' . (!empty($user_info->last_name) ? $user_info->last_name : '') . ';' . (!empty($user_info->first_name) ? $user_info->first_name : '') . '
 FN:' . (!empty($user_info->display_name) ? $user_info->display_name : '') . '
-ORG:' . (!empty($user_info->user_organization) ? $user_info->user_organization : '') . '
 URL:' . (!empty($user_info->user_url) ? $user_info->user_url : '') . '
+PHOTO:' . (!empty($user_info->user_photourl) ? $user_info->user_photourl : '') . '
+ORG:' . (!empty($user_info->user_organization) ? $user_info->user_organization : '') . '
+NOTE:' . (!empty($user_info->user_note) ? $user_info->user_note : '') . '
 TITLE:' . (!empty($user_info->user_job_title) ? $user_info->user_job_title : '') . '
 TEL;TYPE=WORK,VOICE:' . (!empty($user_info->user_phone_work) ? $user_info->user_phone_work : '') . '
 TEL;TYPE=CELL,VOICE:' . (!empty($user_info->user_phone_mobile) ? $user_info->user_phone_mobile : '') . '
@@ -126,7 +137,7 @@ END:VCARD';
 				fclose($vcfFile);
 				$html .= '
 				<div class="vcard_button">
-					<a href="' . get_bloginfo('url') . 
+					<a href="' . get_bloginfo('wpurl') . 
 					'/wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
 					$user_info->user_login . '.vcf">Download vCard</a>
 				</div>';
@@ -154,6 +165,8 @@ function add_additional_user_fields() {
 	global $user_id;
 	
 	$user_organization = get_user_meta($user_id, 'user_organization', true);
+	$user_photourl = get_user_meta($user_id, 'user_photourl', true);
+	$user_note = get_user_meta($user_id, 'user_note', true);
 	$user_job_title = get_user_meta($user_id, 'user_job_title', true);
 	$user_phone_work = get_user_meta($user_id, 'user_phone_work', true);	
 	$user_phone_mobile = get_user_meta($user_id, 'user_phone_mobile', true);
@@ -166,6 +179,17 @@ function add_additional_user_fields() {
 	
 	echo '<h3>Additional Information (vCard & hCard)</h3>
 	<table class="form-table">
+	
+	<tr>
+		<th>
+			<label for="user_photourl">Photo (URL): </label>
+		</th>
+		<td>
+			<input name="user_photourl" id="user_photourl" value="' . 
+			$user_photourl . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
 	<tr>
 		<th>
 			<label for="user_organization">Organization: </label>
@@ -266,6 +290,16 @@ function add_additional_user_fields() {
 		</td>
 	</tr>
 	
+	<tr>
+		<th>
+			<label for="user_note">Note: </label>
+		</th>
+		<td>
+			<textarea name="user_note" id="user_note">' . 
+			$user_note . '</textarea>
+		</td>
+	</tr>
+	
 	</table>';
 }
 
@@ -282,6 +316,11 @@ function save_additional_user_fields() {
 	if ( !current_user_can( 'edit_user', $user_id ) ) 
 		return false; 
 
+	/* Save Photo URL */
+	$user_photourl = $_POST['user_photourl'];
+	if (!empty($user_photourl)) update_user_meta($user_id, 'user_photourl', $user_photourl);
+	else delete_user_meta($user_id, 'user_photourl');
+	
 	/* Save Organization */
 	$user_organization = $_POST['user_organization'];
 	if (!empty($user_organization)) update_user_meta($user_id, 'user_organization', $user_organization);
@@ -291,6 +330,11 @@ function save_additional_user_fields() {
 	$user_job_title = $_POST['user_job_title'];
 	if (!empty($user_job_title)) update_user_meta($user_id, 'user_job_title', $user_job_title);
 	else delete_user_meta($user_id, 'user_job_title');
+	
+	/* Save Note */
+	$user_note = $_POST['user_note'];
+	if (!empty($user_note)) update_user_meta($user_id, 'user_note', $user_note);
+	else delete_user_meta($user_id, 'user_note');
 	
 	/* Save Phone (Work) */
 	$user_phone_work = $_POST['user_phone_work'];

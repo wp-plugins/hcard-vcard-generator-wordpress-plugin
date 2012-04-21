@@ -3,7 +3,7 @@ Contributors: jkohlbach
 Donate link: http://www.codemyownroad.com
 Tags: hcard, vcard, users
 Requires at least: 3.0
-Tested up to: 3.1
+Tested up to: 3.3.2
 Stable tag: trunk
 
 Given a user ID, this plugin will generate appropriate microformat compatible hCard and downloadable vCard formats for users.
@@ -71,6 +71,10 @@ hCard Format:
 </div>`
 
 == Changelog ==
+
+= 1.8 =
+* Changed URL of photo to use WPURL instead of URL for installations that have 
+moved their WordPress install to a subdirectory. Also added PHOTO and NOTES support.
 
 = 1.7 =
 * Adding .htaccess to force mime type of .vcf
