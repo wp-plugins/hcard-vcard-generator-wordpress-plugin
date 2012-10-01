@@ -7,7 +7,7 @@
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.8
+* Version: 1.9
 */
 
 /*
@@ -70,7 +70,7 @@ function generate_card($user_id, $type = 'hCard') {
 			if (!empty($user_info->user_phone_work))
 				$html .= '<div class="tel">
 			<span class="type work">Tel: </span> ' . 
-				$user_info->user_phone_work . '</p>';
+				$user_info->user_phone_work . '</div>';
 				
 			if (!empty($user_info->user_phone_mobile))
 				$html .= '<div class="tel">
@@ -92,7 +92,7 @@ function generate_card($user_id, $type = 'hCard') {
 			
 			if (!empty($user_info->user_email))
 				$html .= '<div class="email" style="display:none;">' . 
-				'<a href="' . $user_info->user_email . '">' . 
+				'<a href="mailto:' . $user_info->user_email . '">' . 
 				$user_info->user_email . '</a></div>';
 				
 			if (!empty($user_info->user_street_address_line_1))
