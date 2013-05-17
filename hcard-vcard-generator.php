@@ -95,7 +95,8 @@ URL;TYPE=WORK:' . (!empty($user_info->user_url) ? $user_info->user_url : '');
 				$base64Photo = base64_encode(file_get_contents($user_info->user_photourl, true));
 			}
 
-			$fileContents .= 'PHOTO;ENCODING=b;TYPE=JPEG:' . (!empty($user_info->user_photourl) ? $base64Photo : '') . '
+			$fileContents .= '
+PHOTO;ENCODING=b;TYPE=JPEG:' . (!empty($user_info->user_photourl) ? $base64Photo : '') . '
 ORG:' . (!empty($user_info->user_organization) ? $user_info->user_organization : '') . '
 NOTE:' . (!empty($user_info->user_note) ? $user_info->user_note : '') . '
 TITLE:' . (!empty($user_info->user_job_title) ? $user_info->user_job_title : '') . '
