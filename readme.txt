@@ -3,16 +3,16 @@ Contributors: jkohlbach
 Donate link: http://www.codemyownroad.com
 Tags: hcard, vcard, users
 Requires at least: 3.0
-Tested up to: 3.4.2
+Tested up to: 3.5.1
 Stable tag: trunk
 
-Given a user ID, this plugin will generate appropriate microformat compatible hCard and downloadable vCard formats for users.
+Given a user ID or login, this plugin will generate appropriate microformat compatible hCard and downloadable vCard formats for users.
 
 == Description ==
 
 The hCard & vCard Generator plugin was created to solve one specific problem, generating microformats compatible hCards from WordPress users and companion vCards for downloading purposes.
 
-The plugin also beefs up the user profile section with new fields for organisation, job title, phone and mobile numbers
+The plugin also beefs up the user profile section with new fields for organisation, job title, phone, fax and mobile numbers as well as address.
 
 == Installation ==
 
@@ -29,48 +29,27 @@ To generate the vCard for admin use:
 Alternatively, as of version 1.2 you can display the widget via shortcode:
 `[hcardvcard title="Testing Title" user="1" display_vcard=true display_hcard=true]`
 
-All attributes for the shortcode are optional, the current author gets used if no value is given.
+All attributes for the shortcode are optional, the current author gets used if no user value is given.
+
+There is also a Widget included for easy use in the sidebar.
+
+You can use the login name for the user value with the shortcode or widget rather than the ID, but calling the generate function directly requires the User ID.
 
 == Frequently Asked Questions ==
 
 N/A
 
 == Screenshots ==
-Examples of format outputs:
----------------------------
 
-vCard Format:
-
-BEGIN:VCARD
-VERSION:3.0
-N:Gump;Forrest
-FN:Forrest Gump
-ORG:Bubba Gump Shrimp Co.
-TITLE:Shrimp Man
-TEL;TYPE=WORK,VOICE:(111) 555-1212
-EMAIL;TYPE=PREF,INTERNET:forrestgump@example.com
-ADR
-END:VCARD
-
-hCard Format:
-`<div class="vcard">
-	<span class="fn">Forrest Gump</span>
-	<a class="url" href="http://example.com">http://example.com</a>
-	<div class="tel">
-		<span class="type">Work</span>:
-		<span class="value">+1.415.555.1212</span>
-	</div>
-	<div class="adr">
-		<div class="street-address">665 3rd St.</div>
-		<div class="extended-address">Suite 207</div>
-		<span class="locality">San Francisco</span>,
-		<span class="region">CA</span>
-		<span class="postal-code">94107</span>
-		<div class="country-name">U.S.A.</div>
-	</div>
-</div>`
+N/A
 
 == Changelog ==
+
+= 2.0 =
+* Fix photo parameter, now encodes the photo into the VCF in Base64.
+* Various VCARD format fixes to be more compatible across different mail clients
+* Added Fax option to user page
+* Doing some code cleanup
 
 = 1.9 =
 * Fixing HTML formatting bugs (thanks R. Richard Hobbs)

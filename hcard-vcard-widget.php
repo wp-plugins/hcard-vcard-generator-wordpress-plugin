@@ -49,7 +49,7 @@ class Widget_hCard_vCard extends WP_Widget {
 			if (!$autogen_title) {
 				echo (!empty($title) ? '<h2 class="hcard-vcard-title">' . $title . '</h2>' : '');
 			} else {
-				echo '<h2 class="hcard-vcard-title">Contact <span class="fn">' . $user_info->display_name . '</span></h2>';
+				echo '<h2 class="mp-vcard-title">Contact <span class="fn">' . $user_info->first_name . ' ' . $user_info->last_name . '</span></h2>';
 			}
 			
 			echo '<div>' .

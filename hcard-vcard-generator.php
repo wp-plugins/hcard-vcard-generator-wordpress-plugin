@@ -7,43 +7,7 @@
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 1.9
-*/
-
-/*
-Examples of format outputs:
----------------------------
-
-vCard Format:
-
-BEGIN:VCARD
-VERSION:3.0
-N:Gump;Forrest
-FN:Forrest Gump
-ORG:Bubba Gump Shrimp Co.
-TITLE:Shrimp Man
-TEL;TYPE=WORK,VOICE:(111) 555-1212
-EMAIL;TYPE=PREF,INTERNET:forrestgump@example.com
-ADR
-END:VCARD
-
-hCard Format:
-<div class="vcard">
-	<span class="fn">Forrest Gump</span>
-	<a class="url" href="http://example.com">http://example.com</a>
-	<div class="tel">
-		<span class="type">Work</span>:
-		<span class="value">+1.415.555.1212</span>
-	</div>
-	<div class="adr">
-		<div class="street-address">665 3rd St.</div>
-		<div class="extended-address">Suite 207</div>
-		<span class="locality">San Francisco</span>,
-		<span class="region">CA</span>
-		<span class="postal-code">94107</span>
-		<div class="country-name">U.S.A.</div>
-	</div>
-</div>
+* Version: 2.0
 */
 
 /*******************************************************************************
@@ -65,84 +29,105 @@ function generate_card($user_id, $type = 'hCard') {
 			if (!empty($user_info->user_photourl))
 				$html .= '<img src="' . $user_info->user_photourl . 
 				'" class="photo" alt="' . 
-				$user_info->first_name . ' ' . $user_info->last_name . '" />';
-			
-			if (!empty($user_info->user_phone_work))
-				$html .= '<div class="tel">
-			<span class="type work">Tel: </span> ' . 
-				$user_info->user_phone_work . '</div>';
-				
-			if (!empty($user_info->user_phone_mobile))
-				$html .= '<div class="tel">
-				<span class="type cell">Cell</span> ' . 
-				$user_info->user_phone_mobile . '</div>';
-			
-			if (!empty($user_info->user_organization))
-				$html .= '<div class="org url">
-				<a href="' . $user_info->user_url . '">' .
-				$user_info->user_organization . '</a></div>';
+				(!empty($user_info->first_name) ? $user_info->first_name : '') . ' ' . 
+				(!empty($user_info->last_name) ? $user_info->last_name : '') . '" />';
 			
 			if (!empty($user_info->user_job_title))
 				$html .= '<div class="title" style="display:none;">' . 
 				$user_info->user_job_title . '</div>';
 				
-			if (!empty($user_info->user_note))
-				$html .= '<div class="note" style="display:none;">' . 
-				$user_info->user_note . '</div>';
+			if (!empty($user_info->user_organization))
+				$html .= '<div class="org url">
+				<a href="' . $user_info->user_url . '">' .
+				$user_info->user_organization . '</a></div>';
 			
+			if (!empty($user_info->user_street_address_line_1))
+				$html .= '<div class="adr">
+					<div class="street-address">' . $user_info->user_street_address_line_1 .
+					(!empty($user_info->user_street_address_line_2) ? '<br />' . $user_info->user_street_address_line_2 : '') . '</div>
+					<span class="locality">' . $user_info->user_locality . '</span>,
+					<span class="region">' . $user_info->user_region . '</span> 
+					<span class="postal-code">' . $user_info->user_postcode . '</span> 
+					<div class="country-name">' . $user_info->user_country . '</div>
+				</div>';
+				
+			if (!empty($user_info->user_phone_work))
+				$html .= '<div class="tel">' .
+				'<span class="type work">Phone: </span> ' . 
+				$user_info->user_phone_work . '</div>';
+			
+			if (!empty($user_info->user_phone_fax))
+				$html .= '<div class="tel">' .
+				'<span class="type fax">Fax: </span> ' . 
+				$user_info->user_phone_fax . '</div>';
+			
+			if (!empty($user_info->user_phone_mobile))
+				$html .= '<div class="tel">' . 
+				'<span class="type cell">Mobile: </span> ' . 
+				$user_info->user_phone_mobile . '</div>';
+				
 			if (!empty($user_info->user_email))
 				$html .= '<div class="email" style="display:none;">' . 
 				'<a href="mailto:' . $user_info->user_email . '">' . 
 				$user_info->user_email . '</a></div>';
-				
-			if (!empty($user_info->user_street_address_line_1))
-				$html .= '<div class="adr">
-					<div class="street-address">' . $user_info->user_street_address_line_1 . '</div>
-					<div class="extended-address">' . $user_info->user_street_address_line_2 . '</div>
-					<span class="locality">' . $user_info->user_locality . '</span>,
-					<span class="region">' . $user_info->user_region . '</span>
-					<span class="postal-code">' . $user_info->user_postcode . '</span>
-					<div class="country-name">' . $user_info->user_country . '</div>
-				</div>';
+			
+			if (!empty($user_info->user_note))
+				$html .= '<div class="note" style="display:none;">' . 
+				$user_info->user_note . '</div>';
 			
 		} else {
 			
 			// Generate the vCard and save as a file
 			$fileContents = 'BEGIN:VCARD
 VERSION:3.0
-N:' . (!empty($user_info->last_name) ? $user_info->last_name : '') . ';' . (!empty($user_info->first_name) ? $user_info->first_name : '') . '
-FN:' . (!empty($user_info->display_name) ? $user_info->display_name : '') . '
-URL:' . (!empty($user_info->user_url) ? $user_info->user_url : '') . '
-PHOTO:' . (!empty($user_info->user_photourl) ? $user_info->user_photourl : '') . '
+N:' . (!empty($user_info->last_name) ? $user_info->last_name : '') . ';' . (!empty($user_info->first_name) ? $user_info->first_name : '') . ';
+FN:' . $user_info->first_name . ' ' . $user_info->last_name . '
+URL;TYPE=WORK:' . (!empty($user_info->user_url) ? $user_info->user_url : '');
+
+			if (function_exists('curl_init')) { // cURL is installed on the server so use this preferably
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_HEADER, 0);
+				curl_setopt($ch, CURLOPT_URL, $user_info->user_photourl);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$base64Photo = base64_encode(curl_exec($ch));
+				curl_close($ch);
+			} else { // try using file_get_contents, though this causes some issues on some servers
+				$base64Photo = base64_encode(file_get_contents($user_info->user_photourl, true));
+			}
+
+			$fileContents .= 'PHOTO;ENCODING=b;TYPE=JPEG:' . (!empty($user_info->user_photourl) ? $base64Photo : '') . '
 ORG:' . (!empty($user_info->user_organization) ? $user_info->user_organization : '') . '
 NOTE:' . (!empty($user_info->user_note) ? $user_info->user_note : '') . '
 TITLE:' . (!empty($user_info->user_job_title) ? $user_info->user_job_title : '') . '
 TEL;TYPE=WORK,VOICE:' . (!empty($user_info->user_phone_work) ? $user_info->user_phone_work : '') . '
+TEL;TYPE=WORK,FAX:' . (!empty($user_info->user_phone_fax) ? $user_info->user_phone_fax : '') . '
 TEL;TYPE=CELL,VOICE:' . (!empty($user_info->user_phone_mobile) ? $user_info->user_phone_mobile : '') . '
 EMAIL;TYPE=PREF,INTERNET:' . (!empty($user_info->user_email) ? $user_info->user_email : '') . '
-ADR:' . (!empty($user_info->user_street_address_line_1) ? $user_info->user_street_address_line_1 : '') . ';' . 
-(!empty($user_info->user_street_address_line_2) ? $user_info->user_street_address_line_2 : '') . ';' .
+ADR;TYPE=WORK:;;' . (!empty($user_info->user_street_address_line_1) ? $user_info->user_street_address_line_1 : '')  . (!empty($user_info->user_street_address_line_2) ? ' ' . $user_info->user_street_address_line_2 : '') . ';' .
 (!empty($user_info->user_locality) ? $user_info->user_locality : '') . ';' .
 (!empty($user_info->user_region) ? $user_info->user_region : '') . ';' .
 (!empty($user_info->user_postcode) ? $user_info->user_postcode : '') . ';' .
 (!empty($user_info->user_country) ? $user_info->user_country : '') . '' . '
 END:VCARD';
-			
-			$userVCF = trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
+
+			$upload_dir = wp_upload_dir();
+			$userVCF = $upload_dir['basedir'] . '/' . 
 				$user_info->user_login . '.vcf';
 						
-			if (is_writable(trailingslashit(ABSPATH) . 'wp-content/plugins/hcard-vcard-generator-wordpress-plugin')) {
+			if (is_writable($upload_dir['basedir'] . '/')) {
 				$vcfFile = fopen($userVCF, "w");
 				fwrite($vcfFile, $fileContents);
 				fclose($vcfFile);
 				$html .= '
 				<div class="vcard_button">
-					<a href="' . get_bloginfo('wpurl') . 
-					'/wp-content/plugins/hcard-vcard-generator-wordpress-plugin/' . 
-					$user_info->user_login . '.vcf">Download vCard</a>
+					<a href="' . $upload_dir['baseurl'] . '/' . 
+					$user_info->user_login . '.vcf">vCard</a>
 				</div>';
 			} else {
-				echo "ERROR: Please ensure the hCard/vCard generator plugin directory is writable";
+				
+				echo "ERROR: Please ensure the MP vCard generator plugin directory is writable
+				<pre>" . print_r($upload_dir['basedir'],true) . "</pre>
+				<pre>" . print_r(pathinfo(__FILE__)) . "</pre>";
 			}
 			
 		}
@@ -169,6 +154,7 @@ function add_additional_user_fields() {
 	$user_note = get_user_meta($user_id, 'user_note', true);
 	$user_job_title = get_user_meta($user_id, 'user_job_title', true);
 	$user_phone_work = get_user_meta($user_id, 'user_phone_work', true);	
+	$user_phone_fax = get_user_meta($user_id, 'user_phone_fax', true);	
 	$user_phone_mobile = get_user_meta($user_id, 'user_phone_mobile', true);
 	$user_street_address_line_1 = get_user_meta($user_id, 'user_street_address_line_1', true);
 	$user_street_address_line_2 = get_user_meta($user_id, 'user_street_address_line_2', true);
@@ -217,6 +203,16 @@ function add_additional_user_fields() {
 		<td>
 			<input name="user_phone_work" id="user_phone_work" value="' . 
 			$user_phone_work . '" class="regular_text" type="text" />
+		</td>
+	</tr>
+	
+	<tr>
+		<th>
+			<label for="user_phone_fax">Phone (Fax): </label>
+		</th>
+		<td>
+			<input name="user_phone_fax" id="user_phone_fax" value="' . 
+			$user_phone_fax . '" class="regular_text" type="text" />
 		</td>
 	</tr>
 
@@ -340,6 +336,11 @@ function save_additional_user_fields() {
 	$user_phone_work = $_POST['user_phone_work'];
 	if (!empty($user_phone_work)) update_user_meta($user_id, 'user_phone_work', $user_phone_work);
 	else delete_user_meta($user_id, 'user_phone_work');
+	
+	/* Save Phone (Fax) */
+	$user_phone_fax = $_POST['user_phone_fax'];
+	if (!empty($user_phone_fax)) update_user_meta($user_id, 'user_phone_fax', $user_phone_fax);
+	else delete_user_meta($user_id, 'user_phone_fax');
 	
 	/* Save Phone (Mobile) */
 	$user_phone_mobile = $_POST['user_phone_mobile'];
