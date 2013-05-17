@@ -67,7 +67,7 @@ function generate_card($user_id, $type = 'hCard') {
 				$user_info->user_phone_mobile . '</div>';
 				
 			if (!empty($user_info->user_email))
-				$html .= '<div class="email" style="display:none;">' . 
+				$html .= '<div class="email">' . 
 				'<a href="mailto:' . $user_info->user_email . '">' . 
 				$user_info->user_email . '</a></div>';
 			
