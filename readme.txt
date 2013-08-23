@@ -45,6 +45,11 @@ N/A
 
 == Changelog ==
 
+= 2.1 =
+* Adding specific fn field which is required for validation when widget title is off
+* Adding fn parameter to photo (thanks Fred)
+* Removed inline styles on some divs, these should be hidden in the theme's CSS, not the plugin
+
 = 2.0 =
 * Fix photo parameter, now encodes the photo into the VCF in Base64.
 * Various VCARD format fixes to be more compatible across different mail clients

@@ -7,7 +7,7 @@
 * Author: Josh Kohlbach
 * Author URI: http://codemyownroad.com
 * Plugin URI: http://www.codemyownroad.com/products/hcard-vcard-generator-wordpress-plugin/
-* Version: 2.0
+* Version: 2.1
 */
 
 /*******************************************************************************
@@ -28,12 +28,16 @@ function generate_card($user_id, $type = 'hCard') {
 			// Generate the hCard
 			if (!empty($user_info->user_photourl))
 				$html .= '<img src="' . $user_info->user_photourl . 
-				'" class="photo" alt="' . 
+				'" class="photo fn" alt="' . 
 				(!empty($user_info->first_name) ? $user_info->first_name : '') . ' ' . 
 				(!empty($user_info->last_name) ? $user_info->last_name : '') . '" />';
 			
+			if (!empty($user_info->first_name) && !empty($user_info->last_name))
+				$html .= '<div class="fn">' . $user_info->first_name . ' ' . 
+				$user_info->last_name . '</div>';
+				
 			if (!empty($user_info->user_job_title))
-				$html .= '<div class="title" style="display:none;">' . 
+				$html .= '<div class="title">' . 
 				$user_info->user_job_title . '</div>';
 				
 			if (!empty($user_info->user_organization))
@@ -72,7 +76,7 @@ function generate_card($user_id, $type = 'hCard') {
 				$user_info->user_email . '</a></div>';
 			
 			if (!empty($user_info->user_note))
-				$html .= '<div class="note" style="display:none;">' . 
+				$html .= '<div class="note">' . 
 				$user_info->user_note . '</div>';
 			
 		} else {
