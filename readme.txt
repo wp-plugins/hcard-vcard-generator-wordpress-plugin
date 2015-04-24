@@ -3,7 +3,7 @@ Contributors: jkohlbach
 Donate link: http://www.codemyownroad.com
 Tags: hcard, vcard, users
 Requires at least: 3.0
-Tested up to: 4.1
+Tested up to: 4.2
 Stable tag: trunk
 
 Given a user ID or login, this plugin will generate appropriate microformat compatible hCard and downloadable vCard formats for users.
